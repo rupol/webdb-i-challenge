@@ -29,4 +29,30 @@ router.get("/:id", async (req, res, next) => {
     });
 });
 
+///// ADD ACCOUNT /////
+router.post("/", async (req, res, next) => {
+  const newAccount = {
+    name: req.body.name,
+    budget: req.body.budget
+  };
+
+  db("accounts")
+    .insert(newAccount)
+    .then(id => {
+      db("accounts")
+        .select()
+        .orderBy("id", "desc")
+        .first()
+        .then(account => {
+          res.json(account);
+        })
+        .catch(error => {
+          next(error);
+        });
+    })
+    .catch(error => {
+      next(error);
+    });
+});
+
 module.exports = router;
