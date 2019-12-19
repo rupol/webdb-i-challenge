@@ -82,4 +82,17 @@ router.put("/:id", async (req, res, next) => {
     });
 });
 
+///// DELETE ACCOUNT /////
+router.delete("/:id", async (req, res, next) => {
+  db("accounts")
+    .where("id", req.params.id)
+    .del()
+    .then(num => {
+      res.status(204).end();
+    })
+    .catch(error => {
+      next(error);
+    });
+});
+
 module.exports = router;
