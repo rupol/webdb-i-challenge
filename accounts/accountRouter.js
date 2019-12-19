@@ -16,8 +16,23 @@ const router = express.Router();
 // });
 
 router.get("/", async (req, res, next) => {
+  function find(query = {}) {
+    const { limit = 100, sortby = "id", sortdir = "asc" } = query;
+
+    return db("accounts")
+      .orderBy(sortby, sortdir)
+      .limit(limit)
+      .select();
+  }
+
+  const queryOptions = {
+    limit: req.query.limit,
+    sortby: req.query.sortby,
+    sortdir: req.query.sortdir
+  };
+
   try {
-    res.json(await db("accounts").select());
+    res.json(await find(queryOptions));
   } catch (err) {
     next(err);
   }
