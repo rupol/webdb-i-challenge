@@ -55,4 +55,31 @@ router.post("/", async (req, res, next) => {
     });
 });
 
+///// UPDATE ACCOUNT /////
+router.put("/:id", async (req, res, next) => {
+  const updatedAccount = {
+    name: req.body.name,
+    budget: req.body.budget
+  };
+
+  db("accounts")
+    .where("id", req.params.id)
+    .update(updatedAccount)
+    .then(account => {
+      db("accounts")
+        .select()
+        .where("id", req.params.id)
+        .first()
+        .then(account => {
+          res.json(account);
+        })
+        .catch(error => {
+          next(error);
+        });
+    })
+    .catch(error => {
+      next(error);
+    });
+});
+
 module.exports = router;
